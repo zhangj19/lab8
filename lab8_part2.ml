@@ -22,14 +22,14 @@ internal computational representation into a format, like a string,
 that can be saved in a file or transmitted digitally. It can later be
 "deserialized" to recreate the internal representation. You may notice
 that this provides an opportunity to break an abstraction barrier:
-serializing an object, manipulating its representation, and then
-deserializing back to an object could allow for some invariant to be
-violated. Even so, serialization has its uses when the circumstances
-are warranted. As a result, we'll add to the stack module extremely
-basic support for serialization.
+serializing an object, manipulating its string representation, and
+then deserializing back to an object could allow for some invariant to
+be violated. Even so, serialization has its uses when the
+circumstances are warranted. As a result, we'll add to the stack
+module extremely basic support for serialization.
 
 In order to do this with an abstract type for an element in a stack,
-we will need to have access to a function "serialize" that can accept
+we will need to have access to a function `serialize` that can accept
 a stack element and return a string.
 
 We can use a functor to generate a stack that bundles everything
@@ -37,7 +37,7 @@ together.
 
 In order to do this, we'll first define a module interface, called
 SERIALIZE, that captures the requirements for the elements of a
-stack. It requires that a module expose both a data type and a
+stack. It requires that the module expose both a data type and a
 function that converts values of that type into a string
 representation. As you'll see, the SERIALIZE module type is an
 appropriate signature for the argument of a functor that generates
@@ -50,9 +50,9 @@ module type SERIALIZE =
   end ;;
 
 (* Now we'll define a STACK interface. Notice that unlike the
-INT_STACK interface from the previous lab, we'll specify the `element`
-type to be an abstract type as part of the signature, and add
-additional functions for serialization, as well as a couple of
+`INT_STACK` interface from the previous lab, we'll specify the
+`element` type to be an abstract type as part of the signature, and
+add additional functions for serialization, as well as a couple of
 higher-order functions over stacks. *)
 
 module type STACK =
@@ -89,7 +89,8 @@ were read.)
 
 (Don't forget that you can implement other functions that are not
 specified by the signature if you would like. The module signature
-will prevent them from leaking out of the module.)
+will act as an absrtaction barrier to prevent the extra functions from
+leaking out of the module.)
 ......................................................................*)
 
 module MakeStack (Element: SERIALIZE) : (STACK with type element = Element.t) =
@@ -127,8 +128,8 @@ module MakeStack (Element: SERIALIZE) : (STACK with type element = Element.t) =
   end ;;
 
 (*......................................................................
-Exercise 1B: Now, make a module "IntStack" by applying the functor
-that you just defined to an appropriate module for serializing ints.
+Exercise 1B: Now, make a module `IntStack` by applying the functor
+that you just defined to an appropriate module for serializing integers.
 ......................................................................*)
 
 module IntStack = struct end ;;
@@ -141,7 +142,7 @@ values as strings of the form:
     "(N,'S')"
 
 where N is the int, and S is the string. For instance, a stack with
-two elements might be serialized as
+two elements might be serialized as the string
 
     "(1, 'pushed first'):(2, 'pushed second')"     .
 

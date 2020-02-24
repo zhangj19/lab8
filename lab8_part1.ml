@@ -61,10 +61,29 @@ module type ORDERED_TYPE =
 (*......................................................................
 Exercise 1A: Complete the following functor for making interval modules.
 
-We represent an interval with a variant type, which is either Empty or
-Interval (x, y), where x and y are the bounds of the interval, and are
-themselves contained within the interval. The representation has an
-invariant that x is always less than or equal to y.
+We represent an interval with a variant type, which is either `Empty`
+or `Interval (x, y)`, where `x` and `y` are the bounds of the
+interval, and are themselves contained within the interval. The
+representation has an invariant that `x` is always less than or equal
+to `y` (where the notion of "less than or equal" is given by the
+`compare` function provided by the `ORDERED_TYPE` that the intervals
+are built from).
+
+The functor definition starts out as
+
+    module MakeInterval (Endpoint : ORDERED_TYPE) = 
+      struct
+        ...
+      end
+
+Here, the argument to the functor is a module, given the name
+`Endpoint` and constrained to satisfy the ORDERED_TYPE module
+signature. Thus, we know that `Endpoint` will provide both a type
+(`Endpoint.t`) and a comnparison function over that type
+(`Endpoint.compare`). We can and will use those in defining the module
+being defined by the functor.
+
+Now, complete the funcctor definition below.
 ......................................................................*)
 
 module MakeInterval (Endpoint : ORDERED_TYPE) = 
@@ -74,12 +93,12 @@ module MakeInterval (Endpoint : ORDERED_TYPE) =
       | Empty
 
     (* create low high -- Returns a new interval covering `low` to
-       `high` inclusive. If `low` > `high`, then the interval is
-       empty. *)
+       `high` inclusive. If `low` is greater than `high`, then the
+       interval is empty. *)
     let create (low : Endpoint.t) (high : Endpoint.t) : interval =
       failwith "create not implemented"
 
-    (* is_empty intvl -- Returns true if and only if the `intvl` is
+    (* is_empty intvl -- Returns true if and only if `intvl` is
        empty *)
     let is_empty (intvl : interval) : bool =
       failwith "is_empty not implemented"
@@ -89,41 +108,41 @@ module MakeInterval (Endpoint : ORDERED_TYPE) =
     let contains (intvl : interval) (x : Endpoint.t) : bool =
       failwith "contains not implemented"
 
-    (* intersect intvl1 intvl2 -- Returns the intersection of the two
-       input intervals *)
+    (* intersect intvl1 intvl2 -- Returns the intersection of `intvl1`
+       and `intvl2` *)
     let intersect (intvl1 : interval) (intvl2 : interval) : interval =
       failwith "intersect not implemented"
-  end ;;
+    end ;;
 
 (*......................................................................
-Exercise 1B: Using the completed functor from above, instantiate an
-integer interval module.
+Exercise 1B: Using the completed functor above, instantiate an integer
+interval module.
 ......................................................................*)
 
 module IntInterval = struct end ;;
 
 (*......................................................................
 Exercise 1C: Using your newly created integer interval module, create
-two non-empty intervals named intvl1 and intvl2 that have some
-overlap, and calculate their intersection as intvl1_intersect_intvl2.
+two non-empty intervals named `intvl1` and `intvl2` that have some
+overlap, and calculate their intersection as `intvl1_intersect_intvl2`.
 ......................................................................*)
 
 let intvl1 = failwith "not implemented" ;;
 let intvl2 = failwith "not implemented" ;;
 let intvl1_intersect_intvl2 = failwith "not implemented" ;;
 
-(* There's currently a problem with the MakeInterval functor. It's not
-abstract enough. Notably we are working with an invariant that a valid
-non-empty intervals has an upper bound that is greater than or equal
-to its lower bound. However, this is only enforced by the create
-function, and as it turns out, we can actually bypass the create
-function due to our lack of an abstraction barrier.
+(* There's currently a problem with the `MakeInterval` functor. It's
+not abstract enough. Notably we are working with an invariant that a
+valid non-empty interval has an upper bound that is greater than or
+equal to its lower bound. However, this is only enforced by the
+`create` function, and as it turns out, we can actually bypass the
+`create` function due to our lack of an abstraction barrier.
 
-This expression returns true, as expected.
+This expression returns `true`, as expected.
 
     IntInterval.is_empty (IntInterval.create 4 3) ;;
 
-This, however, returns false. Yikes.
+This, however, returns `false`. Yikes.
 
     IntInterval.is_empty (IntInterval.Interval (4, 3)) ;;
 
@@ -131,15 +150,15 @@ This, however, returns false. Yikes.
 issue, call over a staff member to discuss.**
 
 To make our functor more abstract, we need to restrict the output of
-MakeInterval to an interface that prevents users from directly
-creating interval implementations themselves without using the create
-function.
+`MakeInterval` to an interface that prevents users from directly
+creating interval implementations themselves without using the
+`create` function.
 
 ........................................................................
 Exercise 2A: Complete the following interface for an interval
-module. Note in particular that we should add a new type endpoint to
-give us a way of referring to the type for the endpoints of an
-interval.
+module. Note in particular that we should add a new type `endpoint` to
+give us a way of abstractly referring to the type for the endpoints of
+an interval.
 ......................................................................*)
 
 module type INTERVAL = 
