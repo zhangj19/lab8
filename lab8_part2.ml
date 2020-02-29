@@ -53,11 +53,6 @@ module type SERIALIZE =
     val serialize : t -> string
   end ;;
 
-(* Now we'll define a STACK interface. Notice that unlike the
-`INT_STACK` interface from the previous lab, we'll specify the
-`element` type to be an abstract type as part of the signature, and
-add additional functions for serialization, as well as a couple of
-higher-order functions over stacks. *)
 
 module type STACK =
   sig
@@ -140,8 +135,6 @@ Exercise 1B: Now, make a module `IntStack` by applying the functor
 that you just defined to an appropriate module for serializing integers.
 ......................................................................*)
 
-(* In the following solution, we are explicit about all module types,
-   while providing appropriate sharing constraints. *)
   
 module IntSerialize : (SERIALIZE with type t = int) =
   struct
@@ -152,8 +145,6 @@ module IntSerialize : (SERIALIZE with type t = int) =
 module IntStack : (STACK with type element = IntSerialize.t) =
   MakeStack(IntSerialize) ;;
 
-(* It might be a good exercise to drop one or another of the sharing
-   constraints, or of the module typings, and see what happens. *)
 
 (*......................................................................
 Exercise 1C: Make a module `IntStringStack` that creates a stack whose
@@ -171,10 +162,6 @@ For this oversimplified serialization function, you may assume that
 the string will be made up of alphanumeric characters only.
 ......................................................................*)
 
-(* This time, we left off the typings for the modules
-   `IntStringSerialize` and `IntStringStack`. Can you add them in such
-   a way that the modules are properly abstracted but can still be
-   used to construct and manipulate stacks? *)
     
 module IntStringSerialize =
   struct
