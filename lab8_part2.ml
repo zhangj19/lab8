@@ -105,7 +105,7 @@ module MakeStack (Element: SERIALIZE) : (STACK with type element = Element.t) =
     let push (el : element) (s : stack) : stack = el :: s
 
     let pop_helper (s : stack) : (element * stack) =
-match s with      | [] -> raise Empty      | h :: t -> (h, t)
+      match s with      | [] -> raise Empty      | h :: t -> (h, t)
 
     let top (s : stack) : element =
       fst (pop_helper s)
@@ -123,7 +123,7 @@ match s with      | [] -> raise Empty      | h :: t -> (h, t)
       List.fold_left
 
     let serialize (s : stack) : string =
-      let string_join x y = Element.serialize y                  ^ (if x <> "" then ":" ^ x else "") in      fold_left string_join "" s
+      let string_join x y = Element.serialize y ^ (if x <> "" then ":" ^ x else "") in fold_left string_join "" s
   end ;;
 
 (*......................................................................

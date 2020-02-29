@@ -289,7 +289,7 @@ to allow the creation of generic interval modules*.
 
 (* ... place your implementation of the MakeBestInterval functor here ... *)
 
-module MakeBestInterval (Endpoint : ORDERED_TYPE)                      : (INTERVAL with type endpoint = Endpoint.t) = 
+module MakeBestInterval (Endpoint : ORDERED_TYPE) : (INTERVAL with type endpoint = Endpoint.t) = 
   struct
 type interval =
       | Interval of Endpoint.t * Endpoint.t
@@ -350,4 +350,4 @@ instead?
     IntBestInterval.is_empty (IntBestInterval.Interval (4, 3)) ;;
 ......................................................................*)
 
-module IntBestInterval =  MakeBestInterval    (struct       type t = int       let compare = Stdlib.compare    end) ;;
+module IntBestInterval =  MakeBestInterval (struct type t = int let compare = Stdlib.compare end) ;;
